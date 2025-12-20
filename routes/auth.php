@@ -28,9 +28,9 @@ Route::group(['middleware' => 'guest'], function () {
         ->middleware(['recaptcha:registration', 'throttle:20,1']);
 
     // Login Routes.
-    Route::get('login', [UserLoginController::class, 'showLoginForm'])->name('login');
-    Route::post('login', [UserLoginController::class, 'login'])
-        ->middleware(['recaptcha:login', 'throttle:20,1']);
+  //  Route::get('login', [UserLoginController::class, 'showLoginForm'])->name('login');
+   // Route::post('login', [UserLoginController::class, 'login'])
+    //    ->middleware(['recaptcha:login', 'throttle:20,1']);
 
     // Password Reset Routes.
     Route::get('password/reset', [UserForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
@@ -40,11 +40,7 @@ Route::group(['middleware' => 'guest'], function () {
     Route::post('password/reset', [UserResetPasswordController::class, 'reset'])
         ->middleware('throttle:20,1')->name('password.update');
 
-    // Email Verification Routes.
-    Route::get('email/verify', [UserVerificationController::class, 'show'])->name('verification.notice');
-    Route::get('email/verify/{id}/{hash}', [UserVerificationController::class, 'verify'])->name('verification.verify');
-    Route::post('email/resend', [UserVerificationController::class, 'resend'])
-        ->middleware('throttle:20,1')->name('verification.resend');
+    
 });
 
 // User Logout Route.

@@ -5,15 +5,17 @@ declare(strict_types=1);
 namespace App\Models;
 
 use App\Concerns\QueryBuilderTrait;
-use App\Notifications\AdminResetPasswordNotification;
 use App\Concerns\AuthorizationChecker;
+use App\Notifications\AdminResetPasswordNotification;
 use App\Observers\UserObserver;
+
 use Illuminate\Auth\Notifications\ResetPassword as DefaultResetPassword;
 use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+
 use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
@@ -27,10 +29,12 @@ class User extends Authenticatable
     use Notifiable;
     use QueryBuilderTrait;
 
+    /* =====================================================
+     | ATTRIBUTES
+     ===================================================== */
+
     /**
      * The attributes that are mass assignable.
-     *
-     * @var array
      */
     protected $fillable = [
         'first_name',
@@ -43,8 +47,6 @@ class User extends Authenticatable
 
     /**
      * The attributes that should be hidden for arrays.
-     *
-     * @var array
      */
     protected $hidden = [
         'password',
@@ -53,16 +55,14 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
+     * The attributes that should be cast.
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
 
     /**
-     * The attributes that should be appended to the model.
+     * Attributes appended to the model.
      */
     protected $appends = [
         'avatar_url',
@@ -70,11 +70,15 @@ class User extends Authenticatable
     ];
 
     /**
-     * The relationships that should be eager loaded.
+     * Relationships to eager load.
      */
     protected $with = [
         'avatar',
     ];
+
+    /* =====================================================
+     | RELATIONSHIPS
+     ===================================================== */
 
     public function actionLogs()
     {
@@ -82,7 +86,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the user's metadata.
+     * User metadata.
      */
     public function userMeta()
     {
@@ -90,13 +94,22 @@ class User extends Authenticatable
     }
 
     /**
+     * Avatar relation.
+     */
+    public function avatar(): BelongsTo
+    {
+        return $this->belongsTo(Media::class, 'avatar_id', 'id');
+    }
+
+    /* =====================================================
+     | NOTIFICATIONS
+     ===================================================== */
+
+    /**
      * Send the password reset notification.
-     *
-     * @param  string  $token
      */
     public function sendPasswordResetNotification($token): void
     {
-        // Check if the request is for the admin panel
         if (request()->is('admin/*')) {
             $this->notify(new AdminResetPasswordNotification($token));
         } else {
@@ -104,10 +117,12 @@ class User extends Authenticatable
         }
     }
 
+    /* =====================================================
+     | EXISTING AUTHORIZATION HELPERS
+     ===================================================== */
+
     /**
      * Check if the user has any of the given permissions.
-     *
-     * @param  array|string  $permissions
      */
     public function hasAnyPermission($permissions): bool
     {
@@ -126,20 +141,69 @@ class User extends Authenticatable
         return false;
     }
 
+    /* =====================================================
+     | ARGOS – ROLE HELPERS (AJOUT)
+     ===================================================== */
+
     /**
-     * Get the user's avatar media.
+     * SuperAdmin : autorité totale
      */
-    public function avatar(): BelongsTo
+    public function isSuperAdmin(): bool
     {
-        return $this->belongsTo(Media::class, 'avatar_id', 'id');
+        return $this->hasRole('Superadmin');
     }
 
     /**
-     * Get the user's avatar URL.
+     * Admin paramétrable par permissions
+     */
+    public function isAdmin(): bool
+    {
+        return $this->hasRole('Admin');
+    }
+
+    /**
+     * User simple (consultation)
+     */
+    public function isUser(): bool
+    {
+        return $this->hasRole('User');
+    }
+
+    /* =====================================================
+     | ARGOS – PERMISSION CENTRALE (AJOUT)
+     ===================================================== */
+
+    /**
+     * Vérifie une permission métier ARGOS
+     *
+     * @example personnel.create
+     */
+    public function hasPermission(string $permission): bool
+    {
+        // SuperAdmin : accès total, sans condition
+        if ($this->isSuperAdmin()) {
+            return true;
+        }
+
+        // User simple : aucune permission dynamique
+        if ($this->isUser()) {
+            return false;
+        }
+
+        // Admin : permissions Spatie (via rôles ou directes)
+        return $this->can($permission);
+    }
+
+    /* =====================================================
+     | ACCESSORS
+     ===================================================== */
+
+    /**
+     * Get avatar URL.
      */
     public function getAvatarUrlAttribute(): string
     {
-        if ($this->avatar_id) {
+        if ($this->avatar_id && $this->avatar) {
             return asset('storage/media/' . $this->avatar->file_name);
         }
 
@@ -147,7 +211,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the Gravatar URL for the model's email.
+     * Gravatar / fallback avatar.
      */
     public function getGravatarUrl(int $size = 80): string
     {
@@ -155,7 +219,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the user's full name.
+     * Full name accessor.
      */
     public function getFullNameAttribute(): string
     {

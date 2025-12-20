@@ -219,17 +219,9 @@ return [
         /*
          * Application Service Providers...
          */
-        App\Providers\AppServiceProvider::class,
-        App\Providers\AuthServiceProvider::class,
-        // App\Providers\BroadcastServiceProvider::class,
-        App\Providers\EventServiceProvider::class,
+
         App\Providers\RouteServiceProvider::class,
-        App\Providers\TelescopeServiceProvider::class,
-        App\Providers\ContentServiceProvider::class,
-        App\Providers\MenuServiceProvider::class,
-        App\Providers\ModuleServiceProvider::class,
-        App\Providers\AdminRoutingServiceProvider::class,
-        App\Providers\HookServiceProvider::class,
+        App\Providers\FortifyServiceProvider::class,
         Barryvdh\Debugbar\ServiceProvider::class,
     ],
 

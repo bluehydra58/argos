@@ -38,7 +38,7 @@ Route::get('/translations/{lang}', function (string $lang) {
 });
 
 // Authentication routes
-Route::prefix('auth')->group(function () {
+/*Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
 
     Route::middleware('auth:sanctum')->group(function () {
@@ -46,7 +46,7 @@ Route::prefix('auth')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout']);
         Route::post('/revoke-all', [AuthController::class, 'revokeAll']);
     });
-});
+});*/
 
 // Protected API routes
 Route::middleware(['auth:sanctum'])->prefix('v1')->group(function () {

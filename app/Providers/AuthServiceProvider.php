@@ -2,25 +2,29 @@
 
 namespace App\Providers;
 
-use App\Models\ActionLog;
-use App\Models\Media;
-use App\Models\Module;
-use App\Models\Post;
-use App\Models\Setting;
-use App\Models\Term;
-use App\Models\User;
-use App\Policies\ActionLogPolicy;
-use App\Policies\MediaPolicy;
-use App\Policies\ModulePolicy;
-use App\Policies\PermissionPolicy;
-use App\Policies\PostPolicy;
-use App\Policies\RolePolicy;
-use App\Policies\SettingPolicy;
-use App\Policies\TermPolicy;
-use App\Policies\UserPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Spatie\Permission\Models\Permission;
-use Spatie\Permission\Models\Role;
+use App\Policies\UserCreatePolicy;
+use App\Policies\UserUpdatePolicy;
+use App\Policies\UserDeletePolicy;
+use Illuminate\Support\Facades\Gate;
+
+
+/*
+|--------------------------------------------------------------------------
+| ARGOS – AuthServiceProvider
+|--------------------------------------------------------------------------
+| Ce provider enregistre les Policies utilisées par le système
+| d’autorisation Laravel (Gate / Policy).
+|
+| Sans ce fichier :
+| - authorize() ne fonctionne pas
+| - @can ne fonctionne pas
+| - Les policies ne sont jamais appelées
+|
+*/
+
+use App\Models\Argos\Personnel;
+use App\Policies\Argos\PersonnelPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -30,15 +34,10 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        User::class => UserPolicy::class,
-        Post::class => PostPolicy::class,
-        Role::class => RolePolicy::class,
-        Permission::class => PermissionPolicy::class,
-        Term::class => TermPolicy::class,
-        Media::class => MediaPolicy::class,
-        Setting::class => SettingPolicy::class,
-        Module::class => ModulePolicy::class,
-        ActionLog::class => ActionLogPolicy::class,
+        Personnel::class => PersonnelPolicy::class,
+        \App\Models\User::class => \App\Policies\UserPolicy::class,
+        \App\Models\User::class => \App\Policies\UserUpdatePolicy::class,
+        \App\Models\User::class => \App\Policies\UserDeletePolicy::class,
     ];
 
     /**
@@ -47,5 +46,17 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerPolicies();
+
+        /*
+         |--------------------------------------------------------------------------
+         | Ici, plus tard, on pourra :
+         | - ajouter des Gates globales
+         | - ajouter des règles transversales
+         |--------------------------------------------------------------------------
+         */
+
+         Gate::define('user.create', [UserCreatePolicy::class, 'create']);
+         Gate::define('user.update', [UserUpdatePolicy::class, 'update']);
+        Gate::define('user.delete', [UserDeletePolicy::class, 'delete']);
     }
 }

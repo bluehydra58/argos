@@ -1,49 +1,79 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Seeder;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        User::create([
-            'first_name' => 'Super',
-            'last_name' => 'Admin',
-            'email' => 'superadmin@example.com',
-            'username' => 'superadmin',
-            'password' => Hash::make('12345678'),
-            'email_verified_at' => now(),
-        ]);
+        /*
+        |--------------------------------------------------------------------------
+        | SUPERADMIN ARGOS
+        | Authentification par MATRICULE
+        |--------------------------------------------------------------------------
+        */
 
-        User::create([
-            'first_name' => 'Admin',
-            'last_name' => '',
-            'email' => 'admin@example.com',
-            'username' => 'admin',
-            'password' => Hash::make('password'),
-            'email_verified_at' => now(),
-        ]);
+        User::updateOrCreate(
+            [
+                'matricule' => '20569/S', // identifiant UNIQUE
+            ],
+            [
+                'first_name' => 'Super',
+                'last_name'  => 'Admin',
+                'username'   => 'superadmin',
+                'email'      => 'superadmin@example.com', // facultatif
+                'password'   => Hash::make('password'),
+                'email_verified_at' => now(),
+            ]
+        );
 
-        User::create([
-            'first_name' => 'Sub',
-            'last_name' => 'Scriber',
-            'email' => 'subscriber@example.com',
-            'username' => 'subscriber',
-            'password' => Hash::make('password'),
-            'email_verified_at' => now(),
-        ]);
+        /*
+        |--------------------------------------------------------------------------
+        | (OPTIONNEL) ADMIN DE TEST
+        |--------------------------------------------------------------------------
+        | À garder seulement si tu veux un admin de test
+        */
 
-        // Run factory to create additional users with unique details.
-        User::factory()->count(500)->create();
-        $this->command->info('Users table seeded with 502 users!');
+        
+        User::updateOrCreate(
+            [
+                'matricule' => '20570/S',
+            ],
+            [
+                'first_name' => 'Admin',
+                'last_name'  => 'Test',
+                'username'   => 'admin',
+                'email'      => 'admin@example.com',
+                'password'   => Hash::make('password'),
+                'email_verified_at' => now(),
+            ]
+        );
+        
+
+        /*
+        |--------------------------------------------------------------------------
+        | (OPTIONNEL) USER DE TEST
+        |--------------------------------------------------------------------------
+        */
+
+        
+        User::updateOrCreate(
+            [
+                'matricule' => '20571/S',
+            ],
+            [
+                'first_name' => 'User',
+                'last_name'  => 'Test',
+                'username'   => 'user',
+                'email'      => 'user@example.com',
+                'password'   => Hash::make('password'),
+                'email_verified_at' => now(),
+            ]
+        );
+        
     }
 }

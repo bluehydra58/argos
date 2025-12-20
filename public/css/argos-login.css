@@ -1,0 +1,253 @@
+/* =========================================================
+   VARIABLES DE COULEURS ARGOS
+========================================================= */
+
+:root {
+    --argos-blue-dark: #0b1220;
+    --argos-blue-main: #1e6bff;
+    --argos-blue-soft: #9bb0d3;
+    --argos-blue-light: #e9f0ff;
+    --argos-white: #ffffff;
+
+    /* Surbrillance renforcée */
+    --argos-blue-focus: #5f8dff;
+    --argos-blue-glow: rgba(95, 141, 255, 0.35);
+    --argos-blue-glow-strong: rgba(95, 141, 255, 0.55);
+
+    --transition-fast: 300ms ease;
+}
+
+/* =========================================================
+   THEMES
+========================================================= */
+
+html[data-theme="dark"] {
+    --bg-main: var(--argos-blue-dark);
+    --bg-form: var(--argos-blue-dark);
+    --text-main: var(--argos-white);
+    --text-muted: #b8c6e6;
+    --input-bg: #111a2e;
+    --input-border: #2a3d70;
+    --btn-bg: var(--argos-blue-main);
+    --btn-text: var(--argos-white);
+}
+
+html[data-theme="light"] {
+    --bg-main: var(--argos-white);
+    --bg-form: var(--argos-white);
+    --text-main: #13234a;
+    --text-muted: #375fb8;
+    --input-bg: var(--argos-blue-light);
+    --input-border: #b5c9ff;
+    --btn-bg: var(--argos-white);
+    --btn-text: var(--argos-blue-main);
+}
+
+/* =========================================================
+   GLOBAL
+========================================================= */
+
+html, body {
+    height: 100%;
+}
+
+body.argos-login-body {
+    margin: 0;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: "Segoe UI", system-ui, sans-serif;
+    transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+/* =========================================================
+   LAYOUT
+========================================================= */
+
+.argos-login-visual {
+    background: url("/images/login-visual.jpg") center/cover no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.argos-login-form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-form);
+    transition: background-color var(--transition-fast);
+}
+
+.argos-login-form .w-100 {
+    max-width: 520px;
+    text-align: center;
+}
+
+/* =========================================================
+   LOGO LEFT (ROTATION)
+========================================================= */
+
+.argos-logo-wrapper {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.argos-rotating-logo {
+    width: 300px;
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    transform-style: preserve-3d;
+    animation: rotateY360 30s linear infinite;
+}
+
+@keyframes rotateY360 {
+    0%   { transform: translateX(-50%) perspective(1000px) rotateY(0deg); }
+    50%  { transform: translateX(-50%) perspective(1000px) rotateY(180deg); }
+    100% { transform: translateX(-50%) perspective(1000px) rotateY(360deg); }
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.argos-login-form img {
+    height: 130px;
+    margin-bottom: 0.6rem;
+}
+
+.argos-title {
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: 4px;
+    margin-bottom: 0.3rem;
+    color: var(--text-main);
+    text-shadow: 0 0 8px rgba(95,141,255,0.35);
+}
+
+.argos-subtitle {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    margin-bottom: 1.4rem;
+}
+
+/* Élève légèrement le groupe supérieur */
+.argos-login-form .text-center {
+    transform: translateY(-10px);
+}
+
+/* =========================================================
+   FORM — INPUTS AVEC SURBRILLANCE RENFORCÉE
+========================================================= */
+
+.form-label {
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+.form-control {
+    background-color: var(--input-bg);
+    border: 2px solid var(--input-border);
+    color: var(--text-main);
+    height: 56px;
+    transition: border-color var(--transition-fast),
+                box-shadow var(--transition-fast),
+                background-color var(--transition-fast);
+}
+
+.form-control::placeholder {
+    color: #7f8db0;
+}
+
+.form-control:hover {
+    border-color: var(--argos-blue-focus);
+}
+
+.form-control:focus {
+    border-color: var(--argos-blue-focus);
+    box-shadow:
+        0 0 0 3px var(--argos-blue-glow),
+        0 0 12px var(--argos-blue-glow-strong);
+}
+
+/* =========================================================
+   PASSWORD TOGGLE
+========================================================= */
+
+.toggle-password {
+    position: absolute;
+    right: 18px;
+    top: 50px;
+    cursor: pointer;
+    color: var(--text-muted);
+}
+
+.toggle-password:hover {
+    color: var(--text-main);
+}
+
+/* =========================================================
+   BUTTON — SURBRILLANCE RENFORCÉE
+========================================================= */
+
+.argos-login-btn {
+    background-color: var(--btn-bg);
+    color: var(--btn-text);
+    font-size: 1.15rem;
+    padding: 14px;
+    border: 2px solid var(--argos-blue-main);
+    box-shadow: 0 0 0 0 var(--argos-blue-glow);
+    transition: background-color var(--transition-fast),
+                color var(--transition-fast),
+                box-shadow var(--transition-fast),
+                transform var(--transition-fast);
+}
+
+.argos-login-btn:hover {
+    background-color: var(--argos-blue-main);
+    color: var(--argos-white);
+    box-shadow:
+        0 0 0 3px var(--argos-blue-glow),
+        0 0 14px var(--argos-blue-glow-strong);
+    transform: translateY(-1px);
+}
+
+.argos-login-btn:active {
+    transform: translateY(0);
+}
+
+/* =========================================================
+   THEME TOGGLE
+========================================================= */
+
+.argos-theme-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: none;
+    background-color: var(--argos-blue-main);
+    color: #fff;
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 999;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.argos-theme-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 12px var(--argos-blue-glow-strong);
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 992px) {
+    .argos-login-visual {
+        display: none;
+    }
+}
